@@ -1,1 +1,1 @@
-![Trending GIF](https://media0.giphy.com/media/YDEiyrRLa6ATrSNQND/giphy.gif?cid=8bb21772p52eopq7irdhr541u90yvez80dugms1dthnd6cqe&ep=v1_gifs_search&rid=giphy.gif&ct=g)
+![Trending GIF](https://media2.giphy.com/media/xT8qBsOjMOcdeGJIU8/giphy.gif?cid=8bb217722fpjuicywzm51efv97ax8yr1uer2j5vjizeq6dxz&ep=v1_gifs_search&rid=giphy.gif&ct=g)
