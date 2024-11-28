@@ -24,6 +24,8 @@ jobs:
           # Sélectionner une catégorie aléatoire
           IFS=',' read -r -a CATEGORIES <<< "$GIPHY_NAME_CAT"
           RANDOM_CATEGORY=${CATEGORIES[$RANDOM % ${#CATEGORIES[@]}]}
+
+          echo $RANDOM_CATEGORY
           
           # Faire une requête à l'API Giphy
           RESPONSE=$(curl -s "https://api.giphy.com/v1/gifs/search?api_key=$GIPHY_API_KEY&q=$RANDOM_CATEGORY&limit=1&offset=0&rating=g&lang=en")
