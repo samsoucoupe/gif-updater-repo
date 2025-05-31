@@ -1,1 +1,1 @@
-![Trending GIF](https://media1.giphy.com/media/v1.Y2lkPThiYjIxNzcyeGQ3YW03ZDB6Z2g4djRsb2t0ZTd0ZG90aG10NGE2MG9rYXA3dDl1cCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/rplvK3z0IzLqBxVJWk/giphy.gif)
+![Trending GIF](https://media2.giphy.com/media/v1.Y2lkPThiYjIxNzcyMDIwYjB0dXd6Znkwc3ZqZjl4cG05bzJhbTYyaW1ocXRmeHc3cmt4eSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/YYKoJL28YtscdUTGWA/giphy.gif)
