@@ -21,15 +21,12 @@ jobs:
           GIPHY_API_KEY: ${{ secrets.GIPHY_API_KEY }}
           GIPHY_NAME_CAT: ${{ vars.GIPHY_NAME_CAT }}
         run: |
-          # Sélection aléatoire d'une catégorie
           IFS=',' read -r -a CATEGORIES <<< "$GIPHY_NAME_CAT"
           RANDOM_CATEGORY=${CATEGORIES[$RANDOM % ${#CATEGORIES[@]}]}
           echo "Selected category: $RANDOM_CATEGORY"
 
-          # Requête à l'API Giphy
           RESPONSE=$(curl -s "https://api.giphy.com/v1/gifs/search?api_key=$GIPHY_API_KEY&q=$RANDOM_CATEGORY&limit=10&rating=g&lang=en")
 
-          # Récupérer une URL de GIF aléatoire dans les résultats
           COUNT=$(echo "$RESPONSE" | jq '.data | length')
           if [ "$COUNT" -eq 0 ]; then
             echo "❌ Aucun GIF trouvé pour la catégorie $RANDOM_CATEGORY"
@@ -41,14 +38,11 @@ jobs:
 
           echo "GIF URL sélectionnée : $GIF_URL"
 
-          # Créer le contenu du GIF sans les balises (juste la ligne markdown)
-          echo "![Trending GIF]($GIF_URL)" > new_gif_content.md
-
-          # Remplacer la section GIF dans README.md en gardant les balises
           sed -i '/<!-- GIF_SECTION -->/,/<!-- END_GIF_SECTION -->/{
-            /<!-- GIF_SECTION -->/{p; r new_gif_content.md
-            }
-            /<!-- GIF_SECTION -->/!{/<!-- END_GIF_SECTION -->/!d}
+            /<!-- GIF_SECTION -->/b
+            /<!-- END_GIF_SECTION -->/b
+            c\
+![Trending GIF]('"$GIF_URL"')
           }' README.md
 
       - name: Commit and push changes
