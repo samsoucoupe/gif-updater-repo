@@ -41,14 +41,15 @@ jobs:
 
           echo "GIF URL sélectionnée : $GIF_URL"
 
-          # Créer le bloc à insérer dans le README
-          echo "<!-- GIF_SECTION -->" > new_gif_block.md
-          echo "![Trending GIF]($GIF_URL)" >> new_gif_block.md
-          echo "<!-- END_GIF_SECTION -->" >> new_gif_block.md
+          # Créer le contenu du GIF sans les balises (juste la ligne markdown)
+          echo "![Trending GIF]($GIF_URL)" > new_gif_content.md
 
-          # Supprimer l'ancien bloc et insérer le nouveau
-          sed -i '/<!-- GIF_SECTION -->/,/<!-- END_GIF_SECTION -->/d' README.md
-          cat new_gif_block.md >> README.md
+          # Remplacer la section GIF dans README.md en gardant les balises
+          sed -i '/<!-- GIF_SECTION -->/,/<!-- END_GIF_SECTION -->/{
+            /<!-- GIF_SECTION -->/{p; r new_gif_content.md
+            }
+            /<!-- GIF_SECTION -->/!{/<!-- END_GIF_SECTION -->/!d}
+          }' README.md
 
       - name: Commit and push changes
         run: |
