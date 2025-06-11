@@ -42,7 +42,7 @@ jobs:
             /<!-- GIF_SECTION -->/b
             /<!-- END_GIF_SECTION -->/b
             c\
-![Trending GIF]('"$GIF_URL"')
+          ![Trending GIF]('"$GIF_URL"')
           }' README.md
 
       - name: Commit and push changes
