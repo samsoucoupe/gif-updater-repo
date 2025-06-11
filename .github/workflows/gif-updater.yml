@@ -48,7 +48,6 @@ jobs:
 
           # Supprimer l'ancien bloc et insérer le nouveau
           sed -i '/<!-- GIF_SECTION -->/,/<!-- END_GIF_SECTION -->/d' README.md
-          echo "" >> README.md
           cat new_gif_block.md >> README.md
 
       - name: Commit and push changes
