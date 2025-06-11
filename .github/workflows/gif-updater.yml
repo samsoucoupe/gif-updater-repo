@@ -1,12 +1,12 @@
-name: Fetch Random GIF Line
+name: Update GIF Only
 
 on:
   schedule:
-    - cron: '0 * * * *'  # toutes les heures
+    - cron: '0 * * * *'  # Toutes les heures
   workflow_dispatch:
 
 jobs:
-  update-gif-line:
+  update-gif:
     runs-on: ubuntu-latest
 
     steps:
@@ -14,40 +14,35 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Install jq
-        run: sudo apt-get update && sudo apt-get install -y jq
+        run: sudo apt-get install -y jq
 
-      - name: Fetch a random GIF line
+      - name: Fetch top GIF
         env:
           GIPHY_API_KEY: ${{ secrets.GIPHY_API_KEY }}
           GIPHY_NAME_CAT: ${{ vars.GIPHY_NAME_CAT }}
         run: |
-          # Choisir une catégorie au hasard
+          # Sélectionner une catégorie aléatoire
           IFS=',' read -r -a CATEGORIES <<< "$GIPHY_NAME_CAT"
           RANDOM_CATEGORY=${CATEGORIES[$RANDOM % ${#CATEGORIES[@]}]}
-          echo "🎲 Selected category: $RANDOM_CATEGORY"
 
-          # Requête Giphy
+          echo $RANDOM_CATEGORY
+          
+          # Faire une requête à l'API Giphy
           RESPONSE=$(curl -s "https://api.giphy.com/v1/gifs/search?api_key=$GIPHY_API_KEY&q=$RANDOM_CATEGORY&limit=1&offset=0&rating=g&lang=en")
-          GIF_URL=$(echo "$RESPONSE" | jq -r ".data[0].images.original.url" | sed 's/\?.*$//')
+          
+          # Extraire l'URL du GIF
+          GIF_URL=$(echo $RESPONSE | jq -r ".data[0].images.original.url")
+          
+          # Nettoyer l'URL pour supprimer les paramètres inutiles
+          CLEAN_GIF_URL=$(echo $GIF_URL | sed 's/\?.*$//')
 
-          # Vérification
-          if [ -z "$GIF_URL" ] || [ "$GIF_URL" = "null" ]; then
-            echo "❌ GIF not found."
-            exit 0
-          fi
+          # Mettre à jour le fichier README.md avec le GIF
+          echo "![Trending GIF]($CLEAN_GIF_URL)" > README.md
 
-          echo "![Trending GIF]($GIF_URL)" > gif_line.md
-          cat gif_line.md
-
-      - name: Commit and push GIF line
+      - name: Commit and push changes
         run: |
           git config --local user.name "github-actions[bot]"
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
-
-          if git diff --quiet; then
-            echo "ℹ️ No changes to commit."
-          else
-            git add gif_line.md
-            git commit -m "🎉 Update GIF line"
-            git push
-          fi
+          git add README.md
+          git commit -m "Update GIF only" || echo "No changes to commit"
+          git push
