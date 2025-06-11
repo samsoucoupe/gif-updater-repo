@@ -1,12 +1,12 @@
-name: Update GIF Only
+name: Fetch Random GIF Line
 
 on:
   schedule:
-    - cron: '0 * * * *'  # Toutes les heures
+    - cron: '0 * * * *'  # toutes les heures
   workflow_dispatch:
 
 jobs:
-  update-gif:
+  update-gif-line:
     runs-on: ubuntu-latest
 
     steps:
@@ -14,52 +14,40 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Install jq
-        run: sudo apt-get install -y jq
+        run: sudo apt-get update && sudo apt-get install -y jq
 
-      - name: Fetch top GIF and update section
+      - name: Fetch a random GIF line
         env:
           GIPHY_API_KEY: ${{ secrets.GIPHY_API_KEY }}
           GIPHY_NAME_CAT: ${{ vars.GIPHY_NAME_CAT }}
         run: |
-          # Sélection aléatoire d'une catégorie
+          # Choisir une catégorie au hasard
           IFS=',' read -r -a CATEGORIES <<< "$GIPHY_NAME_CAT"
           RANDOM_CATEGORY=${CATEGORIES[$RANDOM % ${#CATEGORIES[@]}]}
-          echo "Selected category: $RANDOM_CATEGORY"
+          echo "🎲 Selected category: $RANDOM_CATEGORY"
 
-          # Requête à l'API Giphy
-          RESPONSE=$(curl -s "https://api.giphy.com/v1/gifs/search?api_key=$GIPHY_API_KEY&q=$RANDOM_CATEGORY&limit=10&rating=g&lang=en")
+          # Requête Giphy
+          RESPONSE=$(curl -s "https://api.giphy.com/v1/gifs/search?api_key=$GIPHY_API_KEY&q=$RANDOM_CATEGORY&limit=1&offset=0&rating=g&lang=en")
+          GIF_URL=$(echo "$RESPONSE" | jq -r ".data[0].images.original.url" | sed 's/\?.*$//')
 
-          # Récupérer une URL de GIF aléatoire dans les résultats
-          COUNT=$(echo "$RESPONSE" | jq '.data | length')
-          if [ "$COUNT" -eq 0 ]; then
-            echo "❌ Aucun GIF trouvé pour la catégorie $RANDOM_CATEGORY"
-            exit 1
+          # Vérification
+          if [ -z "$GIF_URL" ] || [ "$GIF_URL" = "null" ]; then
+            echo "❌ GIF not found."
+            exit 0
           fi
 
-          INDEX=$((RANDOM % COUNT))
-          GIF_URL=$(echo "$RESPONSE" | jq -r ".data[$INDEX].images.original.url" | sed 's/\?.*$//')
+          echo "![Trending GIF]($GIF_URL)" > gif_line.md
+          cat gif_line.md
 
-          echo "GIF URL sélectionnée : $GIF_URL"
-
-          # Créer le bloc à insérer dans le README
-          echo "<!-- GIF_SECTION -->" > new_gif_block.md
-          echo "![Trending GIF]($GIF_URL)" >> new_gif_block.md
-          echo "<!-- END_GIF_SECTION -->" >> new_gif_block.md
-
-          # Supprimer l'ancien bloc et insérer le nouveau
-          sed -i '/<!-- GIF_SECTION -->/,/<!-- END_GIF_SECTION -->/d' README.md
-          echo "" >> README.md
-          cat new_gif_block.md >> README.md
-
-      - name: Commit and push changes
+      - name: Commit and push GIF line
         run: |
           git config --local user.name "github-actions[bot]"
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
 
           if git diff --quiet; then
-            echo "No changes to commit"
+            echo "ℹ️ No changes to commit."
           else
-            git add README.md
-            git commit -m "Update GIF only"
+            git add gif_line.md
+            git commit -m "🎉 Update GIF line"
             git push
           fi
