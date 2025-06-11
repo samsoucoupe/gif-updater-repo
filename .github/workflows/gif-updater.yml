@@ -16,7 +16,7 @@ jobs:
       - name: Install jq
         run: sudo apt-get install -y jq
 
-      - name: Fetch top GIF and update section
+      - name: Fetch top GIF and overwrite GIF section
         env:
           GIPHY_API_KEY: ${{ secrets.GIPHY_API_KEY }}
           GIPHY_NAME_CAT: ${{ vars.GIPHY_NAME_CAT }}
@@ -38,12 +38,10 @@ jobs:
 
           echo "GIF URL sélectionnée : $GIF_URL"
 
-          sed -i '/<!-- GIF_SECTION -->/,/<!-- END_GIF_SECTION -->/{
-            /<!-- GIF_SECTION -->/b
-            /<!-- END_GIF_SECTION -->/b
-            c\
-          ![Trending GIF]('"$GIF_URL"')
-          }' README.md
+          sed -i "/<!-- GIF_SECTION -->/,/<!-- END_GIF_SECTION -->/c\\
+<!-- GIF_SECTION -->\\
+![Trending GIF]($GIF_URL)\\
+<!-- END_GIF_SECTION -->" README.md
 
       - name: Commit and push changes
         run: |
