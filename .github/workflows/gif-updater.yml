@@ -39,9 +39,9 @@ jobs:
           echo "GIF URL sélectionnée : $GIF_URL"
 
           sed -i "/<!-- GIF_SECTION -->/,/<!-- END_GIF_SECTION -->/c\\
-<!-- GIF_SECTION -->\\
-![Trending GIF]($GIF_URL)\\
-<!-- END_GIF_SECTION -->" README.md
+          <!-- GIF_SECTION -->\\
+          ![Trending GIF]($GIF_URL)\\
+          <!-- END_GIF_SECTION -->" README.md
 
       - name: Commit and push changes
         run: |
