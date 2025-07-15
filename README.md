@@ -1,4 +1,4 @@
 
 <!-- GIF_SECTION -->
-![Trending GIF](https://media3.giphy.com/media/v1.Y2lkPThiYjIxNzcyNDQ5d2VxNGo2cnJ0dWVxejBhaDkxeXBoaWd0MHFuNzBscjJmbmVtYyZlcD12MV9naWZzX3NlYXJjaCZjdD1n/aQ6ya20vAFJdUH3M5D/giphy.gif)
+![Trending GIF](https://media4.giphy.com/media/v1.Y2lkPThiYjIxNzcyb3J5OW5lcXR2ZDhkaGp6bmtvZjIyenB5OHd1dTNmaGEwNDhua2plbiZlcD12MV9naWZzX3NlYXJjaCZjdD1n/llarwdtFqG63IlqUR1/giphy.gif)
 <!-- END_GIF_SECTION -->
